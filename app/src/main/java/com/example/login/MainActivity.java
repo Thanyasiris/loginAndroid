@@ -3,6 +3,7 @@ package com.example.login;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,16 +20,14 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    //String url = "http://203.150.107.144:7777/login";
-    String url = "https://publicobject.com/helloworld.txt";
+    String url = "https://demo.hashup.tech/std/items?std_id=";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        EditText Username = findViewById(R.id.editUsername);
-        EditText Password = findViewById(R.id.editPassword);
+        EditText Username = findViewById(R.id.editStdId);
 
         Button submitButton = findViewById(R.id.submitButton);
 
@@ -36,39 +35,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String user = Username.getText().toString();
-                String pass = Password.getText().toString();
-                if(user.isEmpty() || pass.isEmpty()){
+                if(user.isEmpty() ){
                     Log.e("error","please fill username&password");
                 }else{
                     Log.d("username","username: "+user);
-                    Log.d("password","password: "+pass);
+                    Intent intent = new Intent(MainActivity.this, DataListActivity.class);
+                    intent.putExtra("user",user);
+                    startActivity(intent);
                 }
             }
         });
 
-        try {
-            run();
-        } catch (IOException e){
-
-        }
-    }
-
-    void run() throws IOException {
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                call.cancel();
-            }
-
-            @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                final String myResponse = response.body().string();
-                Log.d("ok",myResponse);
-            }
-        });
     }
 }
